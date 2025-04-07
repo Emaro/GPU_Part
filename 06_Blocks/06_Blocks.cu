@@ -56,7 +56,8 @@ void add(int* vectorA, int* vectorB, int* vectorC, int size)
 // Kernel function to add the elements of two arrays
 __global__ void cudaAdd(int* vectorA, int* vectorB, int* vectorC, int size)
 {
-    //ToDo: implement kernel 
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    vectorC[i] = vectorA[i] + vectorB[i];
 }
 
 
@@ -114,7 +115,7 @@ int main(void)
     // Run kernel on the GPU
     // ToDo: Play with different block/thread sizes - do you see significant differences?
     //       1048576 Threads are needed to have 1 Thread per addition
-    cudaAdd << <ToDo, ToDo >> > (deviceVectorA, deviceVectorB, deviceVectorC, N);// Kernel execution is async and will not return an error:
+    cudaAdd << <1024, 1024 >> > (deviceVectorA, deviceVectorB, deviceVectorC, N);// Kernel execution is async and will not return an error:
     gpuErrCheck(cudaPeekAtLastError());
 
     // Copy the result stored in deviceVectorC back to host (hostVectorCGPU)
